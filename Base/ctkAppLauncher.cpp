@@ -149,15 +149,23 @@ bool ctkAppLauncherInternal::processAdditionalSettingsArgument()
     {
     return true;
     }
-  QString additionalSettings = this->ParsedArgs.value("launcher-additional-settings").toString();
-  if (!QFile::exists(additionalSettings))
+  QStringList additionalSettingsList = this->ParsedArgs.value("launcher-additional-settings").toString().split(this->PathSep, QString::SkipEmptyParts);
+  bool success = true;
+  foreach(QString additionalSettings, additionalSettingsList)
     {
-    this->reportError(QString("File specified using --launcher-additional-settings argument "
-                              "does NOT exist ! [%1]").arg(additionalSettings));
-    return false;
-    }
+    if (!QFile::exists(additionalSettings))
+      {
+      this->reportError(QString("File specified using --launcher-additional-settings argument "
+                                "does NOT exist ! [%1]").arg(additionalSettings));
+      return false;
+      }
 
-  return this->readSettings(additionalSettings, Self::AdditionalSettings);
+    if (!this->readSettings(additionalSettings, Self::AdditionalSettings))
+      {
+      success = false;
+      }
+    }
+  return success;
 }
 
 // --------------------------------------------------------------------------
