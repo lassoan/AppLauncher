@@ -1,4 +1,5 @@
 project(CTKAppLauncherBase)
+set_msvc_runtime(${CTKAppLauncher_MSVC_RUNTIME})
 
 #
 # See <SOURCE>/CMake/ctkalMacroBuildLib.cmake for details
