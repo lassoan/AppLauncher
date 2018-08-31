@@ -1,3 +1,5 @@
+#include <QtPlugin>
+Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
 
 // Library includes
 @LIB_INCLUDES@

@@ -55,6 +55,8 @@ if(QT_MAC_USE_COCOA)
   target_link_libraries(${KIT}CppTests PRIVATE "-framework cocoa -framework IOKit")
 endif()
 
+target_link_libraries(${KIT}CppTests PRIVATE ${ADDITIONAL_QT_LIBRARIES})
+
 set(label ctkAppLauncher)
 
 macro(add_simple_test TESTNAME)

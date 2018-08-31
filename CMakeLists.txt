@@ -38,6 +38,47 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 #-----------------------------------------------------------------------------
+set(CTKAppLauncher_MSVC_RUNTIME MT)
+macro(set_msvc_runtime RUNTIME)
+  foreach(flag_var
+          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+     if(${flag_var} MATCHES "/MD")
+        string(REGEX REPLACE "/MD" "/${RUNTIME}" ${flag_var} "${${flag_var}}")
+     endif(${flag_var} MATCHES "/MD")
+  endforeach(flag_var)
+endmacro()
+
+set_msvc_runtime(${CTKAppLauncher_MSVC_RUNTIME})
+
+SET(ADDITIONAL_QT_LIBRARIES_PREFIX "c:/D/qt5-minimalistic-builds/qt-5.10.1-static-ltcg-msvc2017-x86_64")
+#SET(ADDITIONAL_QT_LIBRARIES_PREFIX "c:/QtStatic/qt-5.10.1-static-ltcg-msvc2017-x86_64")
+
+SET(ADDITIONAL_QT_LIBRARIES_SUFFIX "")
+
+SET(ADDITIONAL_QT_LIBRARIES
+  Ws2_32
+  opengl32
+  winmm
+  imm32
+  version
+  Netapi32
+  Userenv
+  Dwmapi
+
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/plugins/platforms/qwindows${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/plugins/platforms/qdirect2d${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/Qt5FontDatabaseSupport${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/Qt5EventDispatcherSupport${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/Qt5ThemeSupport${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/Qt5AccessibilitySupport${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/qtharfbuzz${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/qtlibpng${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  ${ADDITIONAL_QT_LIBRARIES_PREFIX}/lib/qtpcre2${ADDITIONAL_QT_LIBRARIES_SUFFIX}.lib
+  )
+
+#-----------------------------------------------------------------------------
 # CTKAppLauncher version number.
 #
 set(CTKAppLauncher_MAJOR_VERSION 0)
@@ -290,6 +331,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC CTKAppLauncherBase)
 if(QT_MAC_USE_COCOA)
   target_link_libraries(${PROJECT_NAME} PRIVATE "-framework cocoa")
 endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ADDITIONAL_QT_LIBRARIES})
+
 set_target_properties(${PROJECT_NAME} PROPERTIES LABELS ctkAppLauncher)
 
 list(APPEND targets_to_install ${PROJECT_NAME})
@@ -300,6 +344,9 @@ if(WIN32)
   #
   add_executable(${PROJECT_NAME}W WIN32 Main.cpp)
   target_link_libraries(${PROJECT_NAME}W PUBLIC CTKAppLauncherBase)
+
+  target_link_libraries(${PROJECT_NAME}W PRIVATE ${ADDITIONAL_QT_LIBRARIES})
+
   set_target_properties(${PROJECT_NAME}W PROPERTIES
     LABELS ctkAppLauncher
     COMPILE_DEFINITIONS CTKAPPLAUNCHER_WITHOUT_CONSOLE_IO_SUPPORT
