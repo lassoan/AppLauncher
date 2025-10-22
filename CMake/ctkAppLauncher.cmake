@@ -438,6 +438,7 @@ function(ctk_applauncher_configure)
   set(options
     VERBOSE_CONFIG
     SPLASHSCREEN_DISABLED
+    SPLASHSCREEN_IGNORE_OUTPUT
     EXCLUDE_FROM_ALL
     IGNORE_CFG_INTDIR
     )
