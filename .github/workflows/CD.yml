@@ -61,4 +61,5 @@ jobs:
           files: |
             *-packages/CTKAppLauncher-*.tar.gz
         env:
-          GITHUB_TOKEN: ${{ secrets.COMMONTKBOT_GITHUB_TOKEN }}
+          # Forks do not have the commontk bot token: fall back to the default token
+          GITHUB_TOKEN: ${{ secrets.COMMONTKBOT_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
